@@ -6,14 +6,14 @@
 
 //==============================================================================
 /*
- *** This Plugin is meant to output the result of convolution of the input signal with a given audio sample loaded by the user.
- The aim is not to produce a conventional convolution reverb by convolving input data with an impulse response. Here the "impulse response" can be any audio file.
- In order to do this, TheMorphvolver computes the FFT of both the incoming audio and the loaded audio file (our "impulse response"). Then it multiply their spectra and takes the inverse fourier transform of the multiplied spectra and output the result.
+ *** This Plugin is meant to output the result of circular convolution of the input signal with a given audio sample loaded by the user.
+ The aim is not to produce a conventional convolution reverb by convolving input data with an impulse response. Here the "impulse response" can be any audio file of any length.
+ In order to do this, TheMorphvolver computes the FFT of both the incoming audio and a segment of the loaded audio file (our "impulse response"). Then it multiply their spectra and takes the inverse fourier transform of the multiplied spectra and output the result.
  To achieve this, TheMorphvolver utilises 3 buffers (FIFO):
  
- - m_fftdata[m_fftsize * 2] = {0};  : the buffer to store the incoming signal data to perform the FFT on.
- - m_convfftdata[m_fftsize * 2] = {0};  : the buffer to store the loaded audio data to perform the FFT on.
- - float procChannelData[m_fftsize * 2] = {0}; : the buffer to store the processed (IFFTd) data to send to output.
+ - m_fftdata  : the buffer to store the incoming signal data to perform the FFT on.
+ - m_convfftdata = {0};  : the buffer to store the loaded audio data to perform the FFT on.
+ - procChannelData : the buffer to store the processed (IFFTd) data to send to output.
  
  These buffers has to be twice the length of our actual decided fftsize because I am using the ::performRealOnlyForwardTransform method of the dsp::FFT class (or its respective inverse).
  

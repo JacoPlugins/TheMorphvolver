@@ -1,12 +1,3 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
@@ -133,8 +124,8 @@ bool TheMorphvolverAudioProcessor::isBusesLayoutSupported (const BusesLayout& la
 void TheMorphvolverAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
 	
-//	Ncalls++;
-//	Logger::writeToLog(String("N calls = ") + String(Ncalls));
+
+//define input channels and buffersize
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
@@ -161,14 +152,13 @@ void TheMorphvolverAudioProcessor::processBlock (AudioBuffer<float>& buffer, Mid
 	if (flag){
 		for (int i = 0; i< buffersize; i++){
 			pushSampleToConvFIFO();
-			
 		}
 	}
 
-		//Logger::writeToLog(String("cf BEFORE fft= ") + String(static_cast<int>(buffersize)));
+	//check wether buffersize is constant Logger::writeToLog(String("bs BEFORE fft= ") + String(static_cast<int>(buffersize)));
+	//Logger::writeToLog(String("convfifo before assign= ") + String(static_cast<int>(m_convfifoIndex)));
 
-	Logger::writeToLog(String("convfifo before assign= ") + String(static_cast<int>(m_convfifoIndex)));
-
+//when the fifos are full, start computing circular convolution
 	if (blockReadyForFFT and convblockReadyForFFT){
 		
 		blockReadyForFFT = false;
@@ -234,8 +224,6 @@ void TheMorphvolverAudioProcessor::pushSampleToFIFO(float sample){
 			blockReadyForFFT = true;
 			m_fifoIndex = 0;
 
-			
-			
 		}
 		
 
@@ -271,12 +259,8 @@ void TheMorphvolverAudioProcessor::pushSampleToConvFIFO(){
 		m_convfifoIndex++; //put to zero after filled convfifo in ::processBlock
 		m_convCounter++;
 		
-	
 	}//if/elsee
 
-		
-	
-	
 }//pushSampleToConvFifo
 
 
